@@ -116,7 +116,7 @@ module SC
         paths_array = paths.split(",")
         paths_array.each do |entry|
           if not entry.include? "index.html"
-            if File.exist? (entry)
+            if File.exist?(entry)
               puts "Deleting "+entry
               File.delete(entry)
             end
