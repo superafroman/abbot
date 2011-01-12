@@ -97,6 +97,10 @@ module SC
               http_body = env['rack.input']
               http_body.rewind
 
+SC.logger << "Body: "
+SC.logger << http_body
+SC.logger << "\n"
+
               some_request = Net::HTTPGenericRequest.new http_method.upcase,
                               true, true, http_path, headers
 
@@ -118,9 +122,10 @@ module SC
             # If this is a cookie, strip out the domain.  This technically may
             # break certain scenarios where services try to set cross-domain
             # cookies, but those services should not be doing that anyway...
-            value.gsub!(/domain=[^\;]+\;? ?/,'') if key.downcase == 'set-cookie'
+#            value.gsub!(/domain=[^\;]+\;? ?/,'') if key.downcase == 'set-cookie'
             # Location headers should rewrite the hostname if it is included.
-            value.gsub!(/^http:\/\/#{http_host}(:[0-9]+)?\//, "http://#{http_host}:#{http_port}/") if key.downcase == 'location'
+#            value.gsub!(/^http:\/\/#{http_host}(:[0-9]+)?\//, "http://#{http_host}:#{http_port}/") if key.downcase == 'location'
+            value.gsub!(/^http:\/\/#{http_host}(:[0-9]+)?\//, "/") if key.downcase == 'location'
             # content-length is returning char count not bytesize
             if key.downcase == 'content-length'
               if response.body.respond_to?(:bytesize)
